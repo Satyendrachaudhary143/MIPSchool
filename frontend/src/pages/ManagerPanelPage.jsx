@@ -8,23 +8,23 @@ const ManagerPanelPage = () => {
 
   const navigation = [
     { name: 'Manager Account', href: '/manager-panel/account' },
-    { name: 'Record Fees', href: '/manager-panel/fees' },
-    { name: 'Fee Structure', href: '/manager-panel/fee-structure' },
-    { name: 'Take Attendance', href: '/manager-panel/attendance' },
-    { name: 'Record Marksheet', href: '/manager-panel/marksheet' },
-    { name: 'Complaints', href: '/manager-panel/complaints' },
-    { name: 'Email & SMS Notifications', href: '/manager-panel/notifications' },
-    { name: 'Groups', href: '/manager-panel/groups' },
-    { name: 'Add Teacher', href: '/manager-panel/add-teacher' },
-    { name: 'Staff Leave Management', href: '/manager-panel/leave-management' },
-    { name: 'Budget Planning', href: '/manager-panel/budget' },
-    { name: 'Salaries', href: '/manager-panel/salaries' },
-    { name: 'All Students', href: '/manager-panel/all-students' },
-    { name: 'Money Management', href: '/manager-panel/money-management' },
-    { name: 'Class Routine', href: '/manager-panel/class-routine' },
-    { name: 'Buses', href: '/manager-panel/buses' },
-    { name: 'Admissions', href: '/manager-panel/admissions' },
-    { name: 'Inquiries', href: '/manager-panel/inquiries' },
+    { name: 'Manage Fees', href: '/manager-panel/fees' },
+    { name: 'Manage Attendance', href: '/manager-panel/attendance' },
+    { name: 'Manage Marksheet', href: '/manager-panel/marksheet' },
+    { name: 'Manage Exam Schedule', href: '/manager-panel/exam-schedule' },
+    { name: 'Manage Grade Book', href: '/manager-panel/grade-book' },
+    { name: 'Manage Digital Library', href: '/manager-panel/library' },
+    { name: 'Manage Documents', href: '/manager-panel/documents' },
+    { name: 'Manage Inventory', href: '/manager-panel/inventory' },
+    { name: 'Manage School Calendar', href: '/manager-panel/calendar' },
+    { name: 'Manage Curriculum', href: '/manager-panel/curriculum' },
+    { name: 'Manage PTM', href: '/manager-panel/ptm' },
+    { name: 'Manage Complaints', href: '/manager-panel/complaints' },
+    { name: 'Manage Notifications', href: '/manager-panel/notifications' },
+    { name: 'Manage Groups', href: '/manager-panel/groups' },
+    { name: 'Manage Admissions', href: '/manager-panel/admissions' },
+    { name: 'Manage Salary', href: '/manager-panel/salary' },
+    { name: 'Manage Payment Settings', href: '/manager-panel/payment-settings' },
   ];
 
   return (
@@ -33,9 +33,18 @@ const ManagerPanelPage = () => {
       <div className={`fixed inset-0 flex z-40 md:hidden ${isSidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'} transition-transform duration-300`}>
         {/* Sidebar overlay */}
         <div className={`absolute inset-0 bg-gray-600 opacity-75 ${isSidebarOpen ? 'block' : 'hidden'}`} onClick={() => setIsSidebarOpen(false)}></div>
-
-        {/* Actual sidebar */}
-        <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white border-r border-gray-200">
+        
+        {/* Mobile sidebar content */}
+        <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+          <div className="absolute top-0 right-0 -mr-12 pt-2">
+            <button
+              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <span className="sr-only">Close sidebar</span>
+              <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
+            </button>
+          </div>
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div className="flex-shrink-0 flex items-center px-4">
               <span className="text-2xl font-bold text-blue-600">Manager Panel</span>
@@ -45,7 +54,6 @@ const ManagerPanelPage = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  onClick={() => setIsSidebarOpen(false)}
                   className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
                     location.pathname === item.href ? 'bg-blue-100 text-blue-900' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                   }`}
@@ -96,7 +104,7 @@ const ManagerPanelPage = () => {
         </div>
 
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <Outlet />{/* Render nested routes here */}
+          <Outlet />
         </main>
       </div>
     </div>

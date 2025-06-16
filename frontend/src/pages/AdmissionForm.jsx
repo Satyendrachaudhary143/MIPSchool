@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaUser, FaEnvelope, FaPhone, FaGraduationCap, FaIdCard, FaSchool, FaCalendarAlt, FaMapMarkerAlt, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaGraduationCap, FaIdCard, FaSchool, FaCalendarAlt, FaMapMarkerAlt, FaArrowRight, FaArrowLeft, FaCheck, FaSpinner } from 'react-icons/fa';
 
 const AdmissionForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     // Personal Information
     fullName: '',
@@ -39,6 +41,17 @@ const AdmissionForm = () => {
     allergies: '',
     emergencyContact: '',
     emergencyPhone: '',
+    bloodGroup: '',
+
+    // Admission Details
+    admissionFor: '',
+    previousClass: '',
+    previousSchoolName: '',
+    previousSchoolAddress: '',
+    idProofType: '',
+    idProofNumber: '',
+    otherIdProofType: '',
+    admissionTakenBy: '',
   });
 
   const handleChange = (e) => {
@@ -58,8 +71,77 @@ const AdmissionForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsSubmitting(false);
+    setIsSuccess(true);
+    
+    // Reset form after 3 seconds
+    setTimeout(() => {
+      setIsSuccess(false);
+      setCurrentStep(1);
+      setFormData({
+        fullName: '',
+        dateOfBirth: '',
+        gender: '',
+        nationality: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        email: '',
+        phone: '',
+        alternatePhone: '',
+        previousSchool: '',
+        grade: '',
+        yearOfCompletion: '',
+        achievements: '',
+        fatherName: '',
+        fatherOccupation: '',
+        fatherPhone: '',
+        motherName: '',
+        motherOccupation: '',
+        motherPhone: '',
+        medicalConditions: '',
+        allergies: '',
+        emergencyContact: '',
+        emergencyPhone: '',
+        bloodGroup: '',
+        admissionFor: '',
+        previousClass: '',
+        previousSchoolName: '',
+        previousSchoolAddress: '',
+        idProofType: '',
+        idProofNumber: '',
+        otherIdProofType: '',
+        admissionTakenBy: '',
+      });
+    }, 3000);
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100
+      }
+    }
   };
 
   const renderStep = () => {
@@ -281,75 +363,164 @@ const AdmissionForm = () => {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Academic Information</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Admission Details</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Previous School
+                  Admission Taken By
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaSchool className="text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    name="previousSchool"
-                    value={formData.previousSchool}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter previous school name"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Grade/Class
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaGraduationCap className="text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    name="grade"
-                    value={formData.grade}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter grade/class"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Year of Completion
-                </label>
-                <input
-                  type="number"
-                  name="yearOfCompletion"
-                  value={formData.yearOfCompletion}
+                <select
+                  name="admissionTakenBy"
+                  value={formData.admissionTakenBy}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter year"
+                  required
+                >
+                  <option value="">Select Who is Taking Admission</option>
+                  <option value="parent">Parent</option>
+                  <option value="guardian">Guardian</option>
+                  <option value="self">Self</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Admission For Class
+                </label>
+                <select
+                  name="admissionFor"
+                  value={formData.admissionFor}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select Class</option>
+                  <option value="Nursery">Nursery</option>
+                  <option value="LKG">LKG</option>
+                  <option value="UKG">UKG</option>
+                  <option value="1">Class 1</option>
+                  <option value="2">Class 2</option>
+                  <option value="3">Class 3</option>
+                  <option value="4">Class 4</option>
+                  <option value="5">Class 5</option>
+                  <option value="6">Class 6</option>
+                  <option value="7">Class 7</option>
+                  <option value="8">Class 8</option>
+                  <option value="9">Class 9</option>
+                  <option value="10">Class 10</option>
+                  <option value="11">Class 11</option>
+                  <option value="12">Class 12</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Previous Class
+                </label>
+                <select
+                  name="previousClass"
+                  value={formData.previousClass}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select Previous Class</option>
+                  <option value="Nursery">Nursery</option>
+                  <option value="LKG">LKG</option>
+                  <option value="UKG">UKG</option>
+                  <option value="1">Class 1</option>
+                  <option value="2">Class 2</option>
+                  <option value="3">Class 3</option>
+                  <option value="4">Class 4</option>
+                  <option value="5">Class 5</option>
+                  <option value="6">Class 6</option>
+                  <option value="7">Class 7</option>
+                  <option value="8">Class 8</option>
+                  <option value="9">Class 9</option>
+                  <option value="10">Class 10</option>
+                  <option value="11">Class 11</option>
+                  <option value="12">Class 12</option>
+                </select>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Previous School Name
+                </label>
+                <input
+                  type="text"
+                  name="previousSchoolName"
+                  value={formData.previousSchoolName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter previous school name"
                   required
                 />
               </div>
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Achievements
+                  Previous School Address
                 </label>
                 <textarea
-                  name="achievements"
-                  value={formData.achievements}
+                  name="previousSchoolAddress"
+                  value={formData.previousSchoolAddress}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows="3"
-                  placeholder="Enter academic achievements"
+                  placeholder="Enter previous school address"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  ID Proof Type
+                </label>
+                <select
+                  name="idProofType"
+                  value={formData.idProofType}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select ID Proof Type</option>
+                  <option value="aadhar">Aadhar Card</option>
+                  <option value="birth">Birth Certificate</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              {formData.idProofType === 'other' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Specify Other ID Proof Type
+                  </label>
+                  <input
+                    type="text"
+                    name="otherIdProofType"
+                    value={formData.otherIdProofType}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter ID proof type"
+                    required
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  ID Proof Number
+                </label>
+                <input
+                  type="text"
+                  name="idProofNumber"
+                  value={formData.idProofNumber}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter ID proof number"
+                  required
                 />
               </div>
             </div>
@@ -491,6 +662,29 @@ const AdmissionForm = () => {
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Additional Information</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Blood Group
+                </label>
+                <select
+                  name="bloodGroup"
+                  value={formData.bloodGroup}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select Blood Group</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Medical Conditions
@@ -562,38 +756,90 @@ const AdmissionForm = () => {
     }
   };
 
+  if (isSuccess) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center"
+      >
+        <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <FaCheck className="text-4xl text-green-500" />
+          </motion.div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Application Submitted!</h2>
+          <p className="text-gray-600">Thank you for submitting your application. We will review it and get back to you soon.</p>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto"
+      >
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center relative overflow-hidden"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full"
+            />
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className="absolute -left-10 -bottom-10 w-40 h-40 bg-white opacity-10 rounded-full"
+            />
             <h2 className="text-3xl font-bold text-white mb-2">Admission Form</h2>
             <p className="text-blue-100">Complete all steps to submit your application</p>
-          </div>
+          </motion.div>
 
           {/* Progress Bar */}
           <div className="px-8 pt-8">
             <div className="flex items-center justify-between mb-8">
               {[1, 2, 3, 4, 5].map((step) => (
-                <div key={step} className="flex items-center">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                <motion.div
+                  key={step}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: step * 0.1 }}
+                  className="flex items-center"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       currentStep >= step
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-200 text-gray-600'
                     }`}
                   >
-                    {step}
-                  </div>
+                    {currentStep > step ? <FaCheck /> : step}
+                  </motion.div>
                   {step < 5 && (
-                    <div
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: currentStep > step ? 1 : 0 }}
                       className={`w-24 h-1 ${
                         currentStep > step ? 'bg-blue-600' : 'bg-gray-200'
-                      }`}
+                      } origin-left`}
                     />
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -602,14 +848,22 @@ const AdmissionForm = () => {
           <div className="p-8">
             <form onSubmit={handleSubmit}>
               <AnimatePresence mode="wait">
-                {renderStep()}
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ type: "spring", stiffness: 100 }}
+                >
+                  {renderStep()}
+                </motion.div>
               </AnimatePresence>
 
               {/* Navigation Buttons */}
               <div className="mt-8 flex justify-between">
                 {currentStep > 1 && (
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.02, x: -5 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={prevStep}
@@ -621,7 +875,7 @@ const AdmissionForm = () => {
                 )}
                 {currentStep < 5 ? (
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={nextStep}
@@ -635,16 +889,26 @@ const AdmissionForm = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="ml-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    disabled={isSubmitting}
+                    className={`ml-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 flex items-center ${
+                      isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+                    }`}
                   >
-                    Submit Application
+                    {isSubmitting ? (
+                      <>
+                        <FaSpinner className="animate-spin mr-2" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Submit Application'
+                    )}
                   </motion.button>
                 )}
               </div>
             </form>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

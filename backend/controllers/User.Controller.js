@@ -2,6 +2,7 @@ import Manager from "../models/Manager.Model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Teacher } from "../models/Teacher.Model.js";
+import { Student } from "../models/Student.Model.js";
 export const login = async (req, res) => {
     const { email, password } = req.body;
     // check empty fields
@@ -12,6 +13,14 @@ export const login = async (req, res) => {
     // const isstusent = 
     const isteacher = await Teacher.findOne({ email });
     if (isteacher) { 
+        const inactive = isteacher.employmentStatus
+        
+        if (inactive === "inactive") {
+          return  res.status(400).json({
+                message: "teacher is block by admin contact manager",
+                success:false
+            })
+        }
         const isPasswordCorrect = await bcrypt.compare(password, isteacher.password);
         if (!isPasswordCorrect) {
             return res.status(400).json({ message: "Invalid password" });
@@ -135,5 +144,128 @@ const { fullName, email, password, mobileNumber, dob, country,state, address, su
 }
 
 export const addStudent = async (req, res) => {
-    
+    const {
+        // personal details
+        fullName,
+        password,
+        dob,
+        gender,
+        nationality,
+        address,
+        city,
+        state,
+        // contact details
+        email,
+        mobileNumber,
+        alternateNumber,
+        // academic details
+        admissionForClass,
+        previousClass,
+        previousSchoolName,
+        previousSchoolAddress,
+        // parent details
+        father,
+        fatherOccupation,
+        mother,
+        motherOccupation,
+        fatherNumber,
+        motherNumber,
+        // emergency contact and medical details
+        bloodgroup,
+        medicalConditions,
+        allergies,
+        emergencyContactName,
+        emergencyContactNumber,
+        // admission details
+        admissionTakenByRole
+    } = req.body;
+
+    // check required fields
+    if (!fullName || !password || !dob || !gender || !nationality || !address || !city || !state ||
+        !email || !mobileNumber || !alternateNumber || !admissionForClass || !previousClass ||
+        !father || !fatherOccupation || !mother || !motherOccupation || !fatherNumber || !motherNumber ||
+        !bloodgroup || !emergencyContactName || !emergencyContactNumber || !admissionTakenByRole) {
+        return res.status(400).json({ message: "All required fields must be filled" });
+    }
+
+    try {
+        // check if the student already exists
+        const existingStudent = await Student.findOne({ email });
+        if (existingStudent) {
+            return res.status(400).json({ message: "Student already exists" });
+        }
+
+        // check email if exists in teacher or manager collection
+        const inTeacher = await Teacher.findOne({ email });
+        const inManager = await Manager.findOne({ email });
+
+        if (inTeacher || inManager) {
+            return res.status(400).json({ message: "Email already exists in another role" });
+        }
+
+        // hash the password
+        const hashedPassword = await bcrypt.hash(password, 10); 
+        // studend add only teacher role
+        const role = req.role; // Assuming the role is set in the request object by the middleware
+
+        if (role!== "teacher") {
+            return res.status(403).json({ message: "Unauthorized to add student", success: false });
+        }
+      
+        // create a new student
+        const newStudent = new Student({
+            // personal details
+            fullName,
+            password: hashedPassword,
+            dob,
+            gender,
+            nationality,
+            address,
+            city,
+            state,
+            // contact details
+            email,
+            mobileNumber,
+            alternateNumber,
+            // academic details
+            admissionForClass,
+            previousClass,
+            previousSchoolName,
+            previousSchoolAddress,
+            // parent details
+            father,
+            fatherOccupation,
+            mother,
+            motherOccupation,
+            fatherNumber,
+            motherNumber,
+            // emergency contact and medical details
+            bloodgroup,
+            medicalConditions,
+            allergies,
+            emergencyContactName,
+            emergencyContactNumber,
+            // admission details
+            admissionTakenBy: req.id, // This will come from the authenticated user (teacher/manager)
+            admissionTakenByRole,
+            role: "student",
+            status: "pending" // default status
+        });
+
+        // save the student to the database
+        await newStudent.save();
+
+        return res.status(201).json({ 
+            message: "Student added successfully", 
+            success: true, 
+            student: newStudent 
+        });
+    } catch (error) {
+        console.log("Error adding student:", error);
+        return res.status(500).json({ 
+            message: "Internal server error", 
+            success: false, 
+            error 
+        });
+    }
 }

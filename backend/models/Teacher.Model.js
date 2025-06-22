@@ -72,7 +72,7 @@ const TeacherSchema = new mongoose.Schema({
   employmentStatus: {
     type: String,
     required: true,
-    enum: ["active", "inactive", "on leave"], // Example statuses
+    enum: ["active", "inactive", "leave"], // Example statuses
   },
   profilePicture: {
     type: String,

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 const TeacherAttendance = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [currentDate, setCurrentDate] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Placeholder student data (replace with actual data fetching)
   const students = [
@@ -38,6 +39,29 @@ const TeacherAttendance = () => {
           : student
       )
     );
+  };
+
+  const handleSubmitAttendance = async () => {
+    setIsSubmitting(true);
+    try {
+      // Here you would typically make an API call to submit the attendance data
+      console.log('Submitting attendance data:', {
+        date: currentDate,
+        attendance: attendanceData
+      });
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success message (you can replace this with a proper notification system)
+      alert('Attendance submitted successfully!');
+      
+    } catch (error) {
+      console.error('Error submitting attendance:', error);
+      alert('Error submitting attendance. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const presentStudents = attendanceData.filter(student => student.status === 'Present');
@@ -91,6 +115,21 @@ const TeacherAttendance = () => {
               </table>
             </div>
           </div>
+        </div>
+
+        {/* Submit Attendance Button */}
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={handleSubmitAttendance}
+            disabled={isSubmitting}
+            className={`px-6 py-3 rounded-md text-white font-semibold ${
+              isSubmitting 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+            }`}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit Attendance'}
+          </button>
         </div>
       </div>
 

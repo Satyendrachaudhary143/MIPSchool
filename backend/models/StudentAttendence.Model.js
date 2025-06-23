@@ -6,9 +6,12 @@ const StudentAttendenceSchema = new mongoose.Schema({
         ref: "Student",
         required: true,
     },
+    class :{
+        type: String,
+        required: true,
+    },
     date: {
-        type: Date,
-        default: Date.now,
+        type: String, // Format: dd-mm-yy
         required: true,
     },
     status: {
@@ -20,9 +23,7 @@ const StudentAttendenceSchema = new mongoose.Schema({
         ref: "Teacher",
         required: true,
     },
-    reason: {
-        type: String,
-    },
+   
   
 }, { timestamps: true })
 export const StudentAttendence = mongoose.model("StudentAttendence", StudentAttendenceSchema);

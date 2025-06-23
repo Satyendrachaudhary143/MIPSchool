@@ -5,6 +5,7 @@ import ManagerRegister from "./Routes/ManagerRegister.js";
 import User from "./Routes/User.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import Teacher from "./Routes/Teacher.js";
 
 dotenv.config();
 const app = express();
@@ -19,7 +20,8 @@ app.use(cookieParser());
 
 //api routes
 app.use("/api/manager", ManagerRegister);
-app.use("/api/user",User);
+app.use("/api/user", User);
+app.use("/api/teacher",Teacher);
 
 DBConnection();
 
